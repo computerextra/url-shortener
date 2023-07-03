@@ -1,6 +1,5 @@
 {
   "name": "url-shortener",
-  "private": false,
   "version": "1.0.0",
   "type": "module",
   "description": "A URL Shortener written in React w/ PHP Backend",
