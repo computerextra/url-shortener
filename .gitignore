@@ -25,4 +25,4 @@ dist-ssr
 
 .yarn
 .env
-public/api/config.php
+public/api/config/config.php
