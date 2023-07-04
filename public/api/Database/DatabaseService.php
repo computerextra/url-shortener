@@ -1,6 +1,5 @@
 <?php
-
-require_once("../config/conf.php");
+include_once($_SERVER['DOCUMENT_ROOT'] . "/api/config/conf.php");
 
 class DatabaseService
 {
@@ -50,16 +49,22 @@ class DatabaseService
 
   private function checkIfUrlExists(string $url)
   {
-    $con = $this->connect();
-    $stmt = $con->prepare("SELECT * FROM shorts WHERE origin = ? LIMIT 1,0");
-    $stmt->bindParam(1, $url);
-    $stmt->execute();
-    $num = $stmt->rowCount();
-    if ($num > 0) {
-      $row = $stmt->fetch(PDO::FETCH_ASSOC);
-      return $row["origin"];
-    } else {
-      return false;
+    try {
+
+      $con = $this->connect();
+      $stmt = $con->prepare("SELECT * FROM shorts WHERE origin=?");
+      $stmt->bindParam(1, $url);
+      $stmt->execute();
+      $num = $stmt->rowCount();
+      if ($num > 0) {
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $row;
+      } else {
+        return false;
+      }
+    } catch (PDOException $e) {
+      echo "ERROR in 'checkIfUrlExists'" . $e->getMessage();
+      die;
     }
   }
 
@@ -71,11 +76,13 @@ class DatabaseService
       $short = $this->generateUniqueID();
       $stmt->bindParam(1, $url);
       $stmt->bindParam(2, $short);
-      $stmt->bindParam(3, $user);
       $stmt->execute();
-      return $short;
+      return [
+        "message" => "Success",
+        "short" => $short
+      ];
     } catch (PDOException $ex) {
-      echo $ex->getMessage();
+      echo "ERROR in 'createNewEntry'" . $ex->getMessage();
       die;
     }
   }
@@ -84,7 +91,7 @@ class DatabaseService
   {
     try {
       $con = $this->connect();
-      $stmt = $con->prepare("SELECT count FROM shorts WHERE id=? LIMIT 1,0");
+      $stmt = $con->prepare("SELECT count FROM shorts WHERE id=?");
       $stmt->bindParam(1, $id);
       $stmt->execute();
       $num = $stmt->rowCount();
@@ -106,9 +113,10 @@ class DatabaseService
   private function updateCounter(int $id)
   {
     $count = $this->getCounter($id);
+    $count += 1;
     try {
       $con = $this->connect();
-      $stmt = $con->prepare("UPDATE shorts SET count = ? WHERE id=?");
+      $stmt = $con->prepare("UPDATE shorts SET count=? WHERE id=?");
       $stmt->bindParam(1, $count);
       $stmt->bindParam(2, $id);
       $stmt->execute();
@@ -130,8 +138,7 @@ class DatabaseService
     $res = $this->checkIfUrlExists($url);
     if (!$res) {
       // Create new Entry
-      $short = $this->createNewEntry($url);
-      return $short;
+      return $this->createNewEntry($url);
     } else {
       return $res;
     }
@@ -151,7 +158,7 @@ class DatabaseService
     $stmt = $con->prepare("SELECT * FROM shorts");
     $stmt->execute();
     $num = $stmt->rowCount();
-    if ($num < 0) {
+    if ($num > 0) {
       $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
       return $rows;
     } else {
@@ -170,7 +177,7 @@ class DatabaseService
     $stmt->bindParam(1, $id);
     $stmt->execute();
     $num = $stmt->rowCount();
-    if ($num < 0) {
+    if ($num > 0) {
       $rows = $stmt->fetch(PDO::FETCH_ASSOC);
       return $rows;
     } else {

@@ -22,7 +22,7 @@ if ($id == null) {
   die;
 }
 
-$short = $databaseService->getOneLink($id);
 $databaseService->updateCount($id);
+$short = $databaseService->getOneLink($id);
 
 echo json_encode($short);

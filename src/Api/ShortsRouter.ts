@@ -12,10 +12,9 @@ export type Link = z.infer<typeof Link>;
 
 const shorts = {
   create: (url: string) =>
-    request.post<{ message: "No Url given" } | { short: string }>(
-      "/create.php",
-      { url: url }
-    ),
+    request.post<
+      { message: "No Url given" } | { message: "Success"; short: string }
+    >("/create.php", { url: url }),
   delete: (id: number) =>
     request.post<{ message: "No ID given" } | { message: "Deleted" }>(
       "/delete.php",

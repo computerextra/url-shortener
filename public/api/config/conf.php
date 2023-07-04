@@ -1,5 +1,5 @@
-<?
-require_once("./config.php");
+<?php
+require_once("config.php");
 
 if (
   !isset($database_host) || $database_host == "" || strlen($database_host) < 1 ||
