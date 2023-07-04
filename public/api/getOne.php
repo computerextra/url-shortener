@@ -11,16 +11,19 @@ $id = null;
 $databaseService = new DatabaseService();
 
 $data = json_decode(file_get_contents("php://input"));
-if (isset($data->id)) {
-  $id = $data->id;
+if (isset($data->short)) {
+  $short = $data->short;
 }
 
-if ($id == null) {
+if ($short == null) {
   echo json_encode([
     "message" => "No ID given"
   ]);
   die;
 }
 
-$short = $databaseService->getOneLink($id);
-echo json_encode($short);
+$shortLink = $databaseService->getOneLink($short);
+echo json_encode([
+  "message" => "Success",
+  "short" => $shortLink,
+]);

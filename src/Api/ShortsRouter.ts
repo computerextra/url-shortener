@@ -22,9 +22,13 @@ const shorts = {
     ),
   getAll: () => request.get<Link[]>("/getAll.php"),
   getOne: (id: number) =>
-    request.post<{ message: "No ID given" } | Link>("/getOne.php", { id: id }),
-  redirect: (id: number) =>
-    request.post<{ message: "No ID given" } | Link>("/getOne.php", { id: id }),
+    request.post<
+      { message: "No ID given" } | { message: "Success"; short: Link }
+    >("/getOne.php", { id: id }),
+  redirect: (short: string) =>
+    request.post<
+      { message: "No ID given" } | { message: "Success"; short: Link }
+    >("/redirect.php", { short: short }),
 };
 
 export default shorts;

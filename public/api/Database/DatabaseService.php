@@ -87,12 +87,12 @@ class DatabaseService
     }
   }
 
-  private function getCounter(int $id)
+  private function getCounter(string $short)
   {
     try {
       $con = $this->connect();
-      $stmt = $con->prepare("SELECT count FROM shorts WHERE id=?");
-      $stmt->bindParam(1, $id);
+      $stmt = $con->prepare("SELECT count FROM shorts WHERE short=?");
+      $stmt->bindParam(1, $short);
       $stmt->execute();
       $num = $stmt->rowCount();
       if ($num > 0) {
@@ -110,15 +110,15 @@ class DatabaseService
     }
   }
 
-  private function updateCounter(int $id)
+  private function updateCounter(string $short)
   {
-    $count = $this->getCounter($id);
+    $count = $this->getCounter($short);
     $count += 1;
     try {
       $con = $this->connect();
-      $stmt = $con->prepare("UPDATE shorts SET count=? WHERE id=?");
+      $stmt = $con->prepare("UPDATE shorts SET count=? WHERE short=?");
       $stmt->bindParam(1, $count);
-      $stmt->bindParam(2, $id);
+      $stmt->bindParam(2, $short);
       $stmt->execute();
     } catch (PDOException $e) {
       echo $e->getMessage();
@@ -144,12 +144,12 @@ class DatabaseService
     }
   }
 
-  public function updateCount(int $id): void
+  public function updateCount(string $short): void
   {
-    if (!isset($id) || $id == 0) {
+    if (!isset($short) || strlen($short) <= 0) {
       die(500);
     }
-    $this->updateCounter($id);
+    $this->updateCounter($short);
   }
 
   public function getAllLinks()
@@ -166,15 +166,15 @@ class DatabaseService
     }
   }
 
-  public function getOneLink(int $id)
+  public function getOneLink(string $short)
   {
-    if (!isset($id) || $id == 0) {
+    if (!isset($short) || strlen($short) < 1) {
       echo "No ID given";
       die(500);
     }
     $con = $this->connect();
-    $stmt = $con->prepare("SELECT * FROM shorts WHERE id=?");
-    $stmt->bindParam(1, $id);
+    $stmt = $con->prepare("SELECT * FROM shorts WHERE short=?");
+    $stmt->bindParam(1, $short);
     $stmt->execute();
     $num = $stmt->rowCount();
     if ($num > 0) {

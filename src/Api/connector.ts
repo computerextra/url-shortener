@@ -1,7 +1,6 @@
 import axios, { AxiosError, AxiosResponse } from "axios";
-import { env } from "../env";
 
-axios.defaults.baseURL = `${env.API}/api`;
+axios.defaults.baseURL = `${import.meta.env.VITE_API_URL}/api`;
 axios.defaults.headers.post["Content-Type"] = "application/json";
 
 axios.interceptors.response.use(
