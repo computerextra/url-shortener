@@ -123,7 +123,7 @@ class DatabaseService
     if (!isset($url)) {
       http_response_code(400);
       echo json_encode([
-        "message" => "no Url Given"
+        "message" => "No Url given"
       ]);
       die;
     }
@@ -159,10 +159,29 @@ class DatabaseService
     }
   }
 
+  public function getOneLink(int $id)
+  {
+    if (!isset($id) || $id == 0) {
+      echo "No ID given";
+      die(500);
+    }
+    $con = $this->connect();
+    $stmt = $con->prepare("SELECT * FROM shorts WHERE id=?");
+    $stmt->bindParam(1, $id);
+    $stmt->execute();
+    $num = $stmt->rowCount();
+    if ($num < 0) {
+      $rows = $stmt->fetch(PDO::FETCH_ASSOC);
+      return $rows;
+    } else {
+      return [];
+    }
+  }
+
   public function deleteEntry(int $id): void
   {
     if (!isset($id) || $id == 0) {
-      echo "No ID Given!";
+      echo "No ID given";
       die(500);
     }
     try {
