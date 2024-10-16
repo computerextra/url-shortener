@@ -17,18 +17,9 @@ function App() {
   return (
     <Container fluid>
       <Routes>
-        <Route
-          path="/"
-          element={<Home />}
-        />
-        <Route
-          path="/:id"
-          element={<Redirect />}
-        />
-        <Route
-          path="/404"
-          element={<NotFound />}
-        />
+        <Route path="/" element={<Home />} />
+        <Route path="/:id" element={<Redirect />} />
+        <Route path="/404" element={<NotFound />} />
       </Routes>
     </Container>
   );
@@ -59,10 +50,22 @@ function Home() {
 
   return (
     <>
+      <a
+        href="https://computer-extra.de/Datenschutz"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Datenschutz
+      </a>
+      <a
+        href="https://computer-extra.de/Impressum"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Impressum
+      </a>
       <h1 className="text-center mt-5 mb-5">Computer Extra - URL Shortener</h1>
-      <Container
-        fluid="sm"
-        className="mt-5">
+      <Container fluid="sm" className="mt-5">
         <Form onSubmit={(e) => e.preventDefault()}>
           <InputGroup>
             <FloatingLabel label="URL">
@@ -73,30 +76,20 @@ function Home() {
                 onChange={(e) => setUrl(e.target.value)}
               />
             </FloatingLabel>
-            <Button
-              variant="outline-success"
-              onClick={handleSubmit}>
+            <Button variant="outline-success" onClick={handleSubmit}>
               Generieren
             </Button>
           </InputGroup>
         </Form>
       </Container>
-      <Container
-        fluid="sm"
-        className="mt-5 d-flex justify-content-center">
+      <Container fluid="sm" className="mt-5 d-flex justify-content-center">
         {short != null && (
           <>
-            <a
-              href={short}
-              target="_blank"
-              rel="noopener noreferrer">
+            <a href={short} target="_blank" rel="noopener noreferrer">
               {short}
             </a>
             &nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;&nbsp;
-            <Button
-              size="sm"
-              variant="outline-secondary"
-              onClick={handleCopy}>
+            <Button size="sm" variant="outline-secondary" onClick={handleCopy}>
               COPY
             </Button>
           </>
@@ -153,17 +146,13 @@ function Redirect() {
 
   if (loading)
     return (
-      <Container
-        fluid="sm"
-        className="mt-5">
+      <Container fluid="sm" className="mt-5">
         <h1 className="text-center">Loading ...</h1>
       </Container>
     );
 
   return (
-    <Container
-      fluid="sm"
-      className="mt-5 text-center">
+    <Container fluid="sm" className="mt-5 text-center">
       <Spinner style={{ height: "10rem", width: "10rem" }} />
       <h2 className="text-center mt-5">
         You will be redirected to: <br />
@@ -183,15 +172,14 @@ function NotFound() {
   const navigate = useNavigate();
 
   return (
-    <Container
-      fluid="sm"
-      className="mt-5">
+    <Container fluid="sm" className="mt-5">
       <h1 className="text-center">No shortened URL found.</h1>
       <Row>
         <Button
           variant="outline-secondary"
           className="mt-5"
-          onClick={() => navigate("/")}>
+          onClick={() => navigate("/")}
+        >
           Back to start
         </Button>
       </Row>
